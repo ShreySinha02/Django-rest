@@ -6,31 +6,35 @@ from .serializers import studentsSerilizers
 import io
 from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin,CreateModelMixin
 
-@csrf_exempt
-def StudenntsView(request):
-    # if request.method =='GET':
-    #     json_data=request.body
-    #     stream=io.BytesIO(json_data)
-    #     pythondata=JSONParser().parse(stream)
-    #     id=pythondata.get('id',None)
-    #     if id is not None:
-    #         stu=Students.objects.get(id=id)
-    #         serializer=studentsSerilizers(stu)
-    #         return JsonResponse(serializer.data,safe=False)
-    #     stu=Students.objects.all()
-    #     serializer=studentsSerilizers(stu,many=True)
-    #     return JsonResponse(serializer.data,safe=False)
-    if request.method =='POST':
-        # json_data=request.body
-        # stream=io.BytesIO(json_data)
-        pythondata=JSONParser().parse(request)
-        print(pythondata)
-        serializer=studentsSerilizers(data=pythondata)
-        if serializer.is_valid():
-            serializer.save()
-            msg={'suc':'sucess'}
-            return JsonResponse(serializer.data,safe=False)
-        return JsonResponse("msg", status=400)
-    return HttpResponse('Hii')
+class StudentList(ListModelMixin,GenericAPIView):
+    queryset=Students.objects.all()
+    serializer_class=studentsSerilizers
+
+    def get(self,request,*args, **kwargs):
+        return self.list(request,*args, **kwargs)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
